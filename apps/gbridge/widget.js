@@ -111,6 +111,20 @@
     }
   }
 
+  function handleSetAlarmEvent(event) {
+    // event.d: [ { "h": 17, "m": 45 }]
+    var alarms = event.d.map(e => { return {
+      on : true, // gbride only passes the activated alarms
+      hr : e.h + e.m/60,
+      msg : "Alarm",
+      last : 0, // last day of the month we alarmed on - so we don't alarm twice in one day!
+      rp : true, // repeat; sadly gbride doesn't pass this information
+      as : false // auto snooze
+    };});
+    require("Storage").write("alarm.json", JSON.stringify(alarms));
+    if (WIDGETS["alarm"]) WIDGETS["alarm"].reload();
+  }
+
   function handleActivityEvent(event) {
     var s = settings();
     // handle setting activity interval
@@ -216,6 +230,9 @@
         break;
       case "act":
         handleActivityEvent(event);
+        break;
+      case "alarm":
+        handleSetAlarmEvent(event);
         break;
     }
     if(_GB)setTimeout(_GB,0,event);
