@@ -32,7 +32,7 @@ let cGrey = "#9E9E9E";
  */
 let lcarsViewPos = 0;
 let drag;
-let hrmValue = 0;
+let hrmValue = { bpm: 0, confidence: 0 };
 var plotWeek = false;
 var disableInfoUpdate = true; // When gadgetbridge connects, step infos cannot be loaded
 
@@ -140,8 +140,9 @@ function printData(key, y, c){
 
   } else if(key == "HRM"){
     text = "HRM";
-    value = hrmValue;
-
+    value = hrmValue.bpm;
+    if (hrmValue.confidence < 85)
+      c = (hrmValue.confidence > 50 ? cWhite : cGrey);
   } else if (key == "VREF"){
     text = "VREF";
     value = E.getAnalogVRef().toFixed(2) + "V";
@@ -496,7 +497,7 @@ Bangle.on('charging',function(charging) {
 });
 
 Bangle.on('HRM', function (hrm) {
-  hrmValue = hrm.bpm;
+  hrmValue = { bpm: hrm.bpm, confidence: hrm.confidence };
 });
 
 
