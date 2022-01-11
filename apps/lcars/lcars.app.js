@@ -1,6 +1,5 @@
 const SETTINGS_FILE = "lcars.setting.json";
 const Storage = require("Storage");
-const weather = require('weather');
 
 
 // ...and overwrite them with any saved values
@@ -149,7 +148,7 @@ function printData(key, y, c){
 
   } else if (key == "Weather"){
     text = "TEMP";
-    const w = weather.get();
+    const w = require('weather').get();
     if (!w) {
       value = "ERR";
     } else {
